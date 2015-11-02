@@ -86,7 +86,7 @@ void SimplexData::printTable(void)
 
 bool SimplexData::isOptimal(void)
 {
-    for (int j=0; j<n; ++j)
+    for (int j=0; j<m+n+1; ++j)
     {
         if (tab[m][j] < 0)
             return false;
@@ -97,7 +97,7 @@ bool SimplexData::isOptimal(void)
 int SimplexData::pickPivotColumn(void)
 {
     // Bland's rule - pick the leftmost one that's < 0
-    for (int j=0; j<n; ++j)
+    for (int j=0; j<m+n; ++j)
     {
         if (tab[m][j] < 0)
             return j;
@@ -119,9 +119,13 @@ int SimplexData::pickPivotRow(int pivotcol)
     int bestindex = -1;
     for (int k=0; k<m; ++k)
     {
-        if (tab[k][pivotcol] > 0)
+        // Don't swap a variable with itself...
+        printf("rowlabels[k]=%d, pivotcol+1=%d\n", rowlabels[k], pivotcol+1);
+        //if ((rowlabels[k] != (pivotcol + 1)) && (tab[k][pivotcol] > 0))
+        if ((rowlabels[k] != (pivotcol + 1)) && (tab[k][pivotcol] > 0))
         {
             double curratio = tab[k][m+n] / tab[k][pivotcol];
+            printf("curratio=%4.2f, bestratio=%4.2f\n", curratio, bestratio);
             if (
                     (curratio < bestratio) ||
                     ((curratio == bestratio) && (rowlabels[k] < rowlabels[bestindex])) // Bland's rule - pick the variable with the smallest index
@@ -134,6 +138,8 @@ int SimplexData::pickPivotRow(int pivotcol)
     }
     return bestindex;
 }
+
+
 
 SimplexData& SimplexData::doPivot(int pivotrow, int pivotcol)
 {
@@ -149,21 +155,61 @@ SimplexData& SimplexData::doPivot(int pivotrow, int pivotcol)
             {
                 if (j != pivotcol)
                 {
-                    res->tab[i][j] = (tab[i][j] * tab[pivotrow][pivotcol] - tab[i][pivotcol] * tab[pivotrow][j]) / tab[pivotrow][pivotcol];
+                    res->tab[i][j] =
+                            (tab[i][j] * tab[pivotrow][pivotcol] - tab[i][pivotcol] * tab[pivotrow][j])
+                            / tab[pivotrow][pivotcol];
+
                 }
             }
         }
     }
     for (int i=0; i<m+1; ++i)
-        res->tab[i][pivotcol] = -tab[i][pivotcol] / tab[pivotrow][pivotcol];
+    {
+        if (i != pivotrow)
+            res->tab[i][pivotcol] = -1 * tab[i][pivotcol] / tab[pivotrow][pivotcol];
+    }
     for (int j=0; j<m+n+1; ++j)
-        res->tab[pivotrow][j] = tab[pivotrow][j] / tab[pivotrow][pivotcol];
+    {
+        if (j != pivotcol)
+            res->tab[pivotrow][j] = tab[pivotrow][j] / tab[pivotrow][pivotcol];
+    }
     res->tab[pivotrow][pivotcol] = 1;
     // Adjust row label in the copy as well
     res->rowlabels[pivotrow] = collabels[pivotcol];
     // ... and return the copy
     return *res;
 }
+
+SimplexData& SimplexData::doPivot2(int pivotrow, int pivotcol)
+{
+    SimplexData *res = new SimplexData();
+    // Make a copy
+    copyTo(*res);
+    res->printTable();
+    // Do the pivot operation in the copy
+    for (int i=0; i<m+1; ++i)
+    {
+        if (i != pivotrow)
+        {
+            for (int j=0; j<m+n+1; ++j)
+            {
+                res->tab[i][j] = tab[i][j] - tab[pivotrow][j] * tab[i][pivotcol] / tab[pivotrow][pivotcol];
+            }
+        }
+    }
+    for (int j=0; j<m+n+1; ++j)
+    {
+        if (j != pivotcol)
+            res->tab[pivotrow][j] = tab[pivotrow][j] / tab[pivotrow][pivotcol];
+    }
+    res->tab[pivotrow][pivotcol] = 1;
+    // Adjust row label in the copy as well
+    res->rowlabels[pivotrow] = collabels[pivotcol];
+    res->printTable();
+    // ... and return the copy
+    return *res;
+}
+
 
 SimplexData::StepResult SimplexData::simpleSimplexStep(void)
 {
@@ -215,7 +261,8 @@ void SimplexData::doSimplex(void)
         printf("Bug!\n");
         break;
     case Optimal:
-        printf("Optimal value is % 6.3f\n", tab[m][m+n]);
+        printf("Optimal value is % 6.3f\n", -1 * tab[m][m+n]);
+
         break;
     }
 }

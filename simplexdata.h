@@ -26,6 +26,7 @@ public:
     bool isUnbounded(int pivotcol);
     int pickPivotRow(int pivotcol);
     SimplexData& doPivot(int pivotrow, int pivotcol);
+    SimplexData& doPivot2(int pivotrow, int pivotcol);
     StepResult simpleSimplexStep(void);
 
     void doSimplex(void);
