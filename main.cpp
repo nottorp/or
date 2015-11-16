@@ -65,9 +65,24 @@ double *tab_2b[] = {line_2b_1, line_2b_2, line_2b_3};
 int main_13(void)
 {
     SimplexData d;
+    printf("==================================================\n");
+    printf("Doing 4a\n");
+    printf("==================================================\n");
     d.setup(m_4a, n_4a, tab_4a);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing 4b\n");
+    printf("==================================================\n");
     d.setup(m_4b, n_4b, tab_4b);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing 4c\n");
+    printf("==================================================\n");
     d.setup(m_4c, n_4c, tab_4c);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing Wikipedia example\n");
+    printf("==================================================\n");
     d.setup(m_w, n_w, tab_w);
     d.doSimplex();
     return 0;
