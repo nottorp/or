@@ -3,8 +3,11 @@
 #include <math.h>
 
 #include "simplexdata.h"
+#include "twophase.h"
 
 using namespace std;
+
+// Test data for homework 1-3
 
 // Sweet, sweet C++ and its dynamic two dimensional arrays...
 // Test 4a
@@ -40,31 +43,26 @@ double line_w_2[] = {2, 5, 3, 0, 1, 15};
 double line_w_3[] = {-2, -3, -4, 0, 0, 0};
 double *tab_w[] = {line_w_1, line_w_2, line_w_3};
 
-//TODO: Use these?
 
-double epsilon = 10e-16;
+// Test data for homework 2-1
 
-bool isZero(double x)
-{
-    return (fabs(x) < epsilon);
-}
+int m_2a = 2;
+int n_2a = 2;
 
-bool equal(double x, double y)
-{
-    return isZero(x - y);
-}
+double line_2a_1[] = {1, 1, GT, 6};
+double line_2a_2[] = {2, 3, LT, 4};
+double line_2a_3[] = {-1, 0, NO, 0};
+double *tab_2a[] = {line_2a_1, line_2a_2, line_2a_3};
 
-bool gtZero(double x)
-{
-    return (x > epsilon);
-}
+int m_2b = 2;
+int n_2b = 3;
 
-bool ltZero(double x)
-{
-    return (x < epsilon);
-}
+double line_2b_1[] = {2, 1, 1, EQ, 4};
+double line_2b_2[] = {1, 1, 2, EQ, 2};
+double line_2b_3[] = {1, 1, 0, NO, 0};
+double *tab_2b[] = {line_2b_1, line_2b_2, line_2b_3};
 
-int main()
+int main_13(void)
 {
     SimplexData d;
     printf("==================================================\n");
@@ -90,3 +88,19 @@ int main()
     return 0;
 }
 
+int main_21(void)
+{
+    TwoPhase t;
+    t.setup(m_2a, n_2a, tab_2a);
+    //t.setup(m_2b, n_2b, tab_2b);
+    t.printInitialTable();
+    t.addSlacks();
+    t.addFakes();
+    t.newObjective();
+    return 0;
+}
+
+int main(void)
+{
+    return main_21();
+}
