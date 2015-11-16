@@ -4,6 +4,12 @@
 
 #include "simplexdata.h"
 
+#undef BLANDS
+#define BLANDS
+
+#undef ALTERNATE_PIVOT
+#define ALTERNATE_PIVOT
+
 SimplexData::SimplexData()
 {
     m = n = 0;
@@ -86,7 +92,7 @@ void SimplexData::printTable(void)
 
 bool SimplexData::isOptimal(void)
 {
-    for (int j=0; j<m+n+1; ++j)
+    for (int j=0; j<m+n; ++j)
     {
         if (tab[m][j] < 0)
             return false;
@@ -96,13 +102,27 @@ bool SimplexData::isOptimal(void)
 
 int SimplexData::pickPivotColumn(void)
 {
+#ifdef BLANDS
     // Bland's rule - pick the leftmost one that's < 0
-    for (int j=0; j<m+n; ++j)
+    for (int j=0; j<n+m; ++j)
     {
         if (tab[m][j] < 0)
             return j;
     }
     return -1;
+#else
+    double curmin = 0;
+    int curindex = -1;
+    for (int j=0; j<m+n; ++j)
+    {
+        if ((tab[m][j] < 0) && (tab[m][j] < curmin))
+        {
+            curmin = tab[m][j];
+            curindex = j;
+        }
+    }
+    return curindex;
+#endif
 }
 
 bool SimplexData::isUnbounded(int pivotcol)
@@ -127,8 +147,11 @@ int SimplexData::pickPivotRow(int pivotcol)
             double curratio = tab[k][m+n] / tab[k][pivotcol];
             printf("curratio=%4.2f, bestratio=%4.2f\n", curratio, bestratio);
             if (
-                    (curratio < bestratio) ||
+                    (curratio < bestratio)
+#ifdef BLANDS
+                    ||
                     ((curratio == bestratio) && (rowlabels[k] < rowlabels[bestindex])) // Bland's rule - pick the variable with the smallest index
+#endif
                )
             {
                 bestratio = curratio;
@@ -185,7 +208,6 @@ SimplexData& SimplexData::doPivot2(int pivotrow, int pivotcol)
     SimplexData *res = new SimplexData();
     // Make a copy
     copyTo(*res);
-    res->printTable();
     // Do the pivot operation in the copy
     for (int i=0; i<m+1; ++i)
     {
@@ -205,7 +227,6 @@ SimplexData& SimplexData::doPivot2(int pivotrow, int pivotcol)
     res->tab[pivotrow][pivotcol] = 1;
     // Adjust row label in the copy as well
     res->rowlabels[pivotrow] = collabels[pivotcol];
-    res->printTable();
     // ... and return the copy
     return *res;
 }
@@ -239,7 +260,11 @@ SimplexData::StepResult SimplexData::simpleSimplexStep(void)
         return InternalError;
     }
     printf ("Pivot row picked: %d, exit variable x%d\n", pivotrow + 1, rowlabels[pivotrow]);
+#ifdef ALTERNATE_PIVOT
+    *this = doPivot2(pivotrow, pivotcol);
+#else
     *this = doPivot(pivotrow, pivotcol);
+#endif
     printTable();
     printf("*** END STEP ***\n");
     return Continue;

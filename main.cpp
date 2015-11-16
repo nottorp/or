@@ -40,22 +40,6 @@ double line_w_2[] = {2, 5, 3, 0, 1, 15};
 double line_w_3[] = {-2, -3, -4, 0, 0, 0};
 double *tab_w[] = {line_w_1, line_w_2, line_w_3};
 
-// 4 (a)
-#define M 3
-#define N 2
-
-double test_table[M + 1][M + N + 1] =
-{
-    {-2, 1, 1, 0, 0, 2},
-    {-1, 2, 0, 1, 0, 7},
-    {1, 0, 0, 0, 1, 3},
-    {-1, -1, 0, 0, 0, 0}
-};
-
-int rowlabel[M] = {3, 4, 5};
-int collabel[M + N] = {1, 2, 3, 4, 5};
-
-
 //TODO: Use these?
 
 double epsilon = 10e-16;
@@ -83,14 +67,26 @@ bool ltZero(double x)
 int main()
 {
     SimplexData d;
-    //d.setup(m_4a, n_4a, tab_4a);
-    //d.setup(m_4b, n_4b, tab_4b);
-    //d.setup(m_4c, n_4c, tab_4c);
+    printf("==================================================\n");
+    printf("Doing 4a\n");
+    printf("==================================================\n");
+    d.setup(m_4a, n_4a, tab_4a);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing 4b\n");
+    printf("==================================================\n");
+    d.setup(m_4b, n_4b, tab_4b);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing 4c\n");
+    printf("==================================================\n");
+    d.setup(m_4c, n_4c, tab_4c);
+    d.doSimplex();
+    printf("==================================================\n");
+    printf("Doing Wikipedia example\n");
+    printf("==================================================\n");
     d.setup(m_w, n_w, tab_w);
     d.doSimplex();
-    //d.simpleSimplexStep();
-    //printTable(M, N, test_table, collabel, rowlabel);
-    //simpleSimplexStep(M, N, test_table, rowlabel, collabel);
     return 0;
 }
 
