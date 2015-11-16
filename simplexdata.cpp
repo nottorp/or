@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "util.h"
 #include "simplexdata.h"
 
 #undef BLANDS
@@ -286,7 +287,9 @@ SimplexData::StepResult SimplexData::doSimplex(void)
         printf("Bug!\n");
         break;
     case Optimal:
-        printf("Optimal value is % 6.3f\n", -1 * tab[m][m+n]);
+        double opt = -tab[m][m+n];
+        if (isZero(opt)) opt=fabs(opt);
+        printf("Optimal value is % 6.3f\n", opt);
 
         break;
     }

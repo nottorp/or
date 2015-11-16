@@ -9,5 +9,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     simplexdata.h \
-    twophase.h
+    twophase.h \
+    util.h
 

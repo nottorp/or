@@ -62,6 +62,22 @@ double line_2b_2[] = {1, 1, 2, EQ, 2};
 double line_2b_3[] = {1, 1, 0, NO, 0};
 double *tab_2b[] = {line_2b_1, line_2b_2, line_2b_3};
 
+int m_2c = 3;
+int n_2c = 4;
+
+double line_2c_1[] = {1, 2, -1, 1, EQ, 0};
+double line_2c_2[] = {2, -2, 3, 3, EQ, 9};
+double line_2c_3[] = {1, -1, 2, -1, EQ, 6};
+double line_2c_4[] = {-3, 1, 3, -1, NO, 0};
+double *tab_2c[] = {line_2c_1, line_2c_2, line_2c_3, line_2c_4};
+
+int m_2d = 2;
+int n_2d = 2;
+double line_2d_1[] = {1, 1, EQ, 2};
+double line_2d_2[] = {2, 2, EQ, 4};
+double line_2d_3[] = {1, 2, NO, 0};
+double *tab_2d[] = {line_2d_1, line_2d_2, line_2d_3};
+
 int main_13(void)
 {
     SimplexData d;
@@ -91,13 +107,22 @@ int main_13(void)
 int main_21(void)
 {
     TwoPhase t;
-    t.setup(m_2a, n_2a, tab_2a);
+    //t.setup(m_2a, n_2a, tab_2a);
     //t.setup(m_2b, n_2b, tab_2b);
+    //t.setup(m_2c, n_2c, tab_2c);
+    t.setup(m_2d, n_2d, tab_2d);
     t.printInitialTable();
     t.addSlacks();
     t.addFakes();
     t.newObjective();
-    t.runFirstPhase();
+    if (t.runFirstPhase())
+    {
+        printf("Original problem is feasible!\n");
+    }
+    else
+    {
+        printf("Original problem is NOT feasible, stopping!\n");
+    }
     return 0;
 }
 

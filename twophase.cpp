@@ -1,7 +1,9 @@
 #include "twophase.h"
 #include "simplexdata.h"
+#include "util.h"
 
 #include <stdio.h>
+
 
 TwoPhase::TwoPhase()
 {
@@ -126,10 +128,15 @@ void TwoPhase::newObjective(void)
     printf("EXIT newObjective()\n");
 }
 
-void TwoPhase::runFirstPhase(void)
+bool TwoPhase::runFirstPhase(void)
 {
     SimplexData::StepResult res = after_objective.doSimplex();
-
+    if (res == SimplexData::Optimal)
+    {
+        if (isZero(after_objective.tab[after_objective.m][after_objective.m + after_objective.n + 1]))
+            return true;
+    }
+    return false;
 }
 
 void TwoPhase::printTable(void)

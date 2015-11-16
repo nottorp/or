@@ -33,7 +33,7 @@ public:
     void addSlacks(void);
     void addFakes(void);
     void newObjective(void);
-    void runFirstPhase(void);
+    bool runFirstPhase(void);
 
     void printInitialTable(void);
     void printTable(void);
