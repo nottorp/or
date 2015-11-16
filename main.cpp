@@ -3,8 +3,11 @@
 #include <math.h>
 
 #include "simplexdata.h"
+#include "twophase.h"
 
 using namespace std;
+
+// Test data for homework 1-3
 
 // Sweet, sweet C++ and its dynamic two dimensional arrays...
 // Test 4a
@@ -40,57 +43,49 @@ double line_w_2[] = {2, 5, 3, 0, 1, 15};
 double line_w_3[] = {-2, -3, -4, 0, 0, 0};
 double *tab_w[] = {line_w_1, line_w_2, line_w_3};
 
-// 4 (a)
-#define M 3
-#define N 2
 
-double test_table[M + 1][M + N + 1] =
-{
-    {-2, 1, 1, 0, 0, 2},
-    {-1, 2, 0, 1, 0, 7},
-    {1, 0, 0, 0, 1, 3},
-    {-1, -1, 0, 0, 0, 0}
-};
+// Test data for homework 2-1
 
-int rowlabel[M] = {3, 4, 5};
-int collabel[M + N] = {1, 2, 3, 4, 5};
+int m_2a = 2;
+int n_2a = 2;
 
+double line_2a_1[] = {1, 1, GT, 6};
+double line_2a_2[] = {2, 3, LT, 4};
+double line_2a_3[] = {-1, 0, NO, 0};
+double *tab_2a[] = {line_2a_1, line_2a_2, line_2a_3};
 
-//TODO: Use these?
+int m_2b = 2;
+int n_2b = 3;
 
-double epsilon = 10e-16;
+double line_2b_1[] = {2, 1, 1, EQ, 4};
+double line_2b_2[] = {1, 1, 2, EQ, 2};
+double line_2b_3[] = {1, 1, 0, NO, 0};
+double *tab_2b[] = {line_2b_1, line_2b_2, line_2b_3};
 
-bool isZero(double x)
-{
-    return (fabs(x) < epsilon);
-}
-
-bool equal(double x, double y)
-{
-    return isZero(x - y);
-}
-
-bool gtZero(double x)
-{
-    return (x > epsilon);
-}
-
-bool ltZero(double x)
-{
-    return (x < epsilon);
-}
-
-int main()
+int main_13(void)
 {
     SimplexData d;
-    //d.setup(m_4a, n_4a, tab_4a);
-    //d.setup(m_4b, n_4b, tab_4b);
-    //d.setup(m_4c, n_4c, tab_4c);
+    d.setup(m_4a, n_4a, tab_4a);
+    d.setup(m_4b, n_4b, tab_4b);
+    d.setup(m_4c, n_4c, tab_4c);
     d.setup(m_w, n_w, tab_w);
     d.doSimplex();
-    //d.simpleSimplexStep();
-    //printTable(M, N, test_table, collabel, rowlabel);
-    //simpleSimplexStep(M, N, test_table, rowlabel, collabel);
     return 0;
 }
 
+int main_21(void)
+{
+    TwoPhase t;
+    t.setup(m_2a, n_2a, tab_2a);
+    //t.setup(m_2b, n_2b, tab_2b);
+    t.printInitialTable();
+    t.addSlacks();
+    t.addFakes();
+    t.newObjective();
+    return 0;
+}
+
+int main(void)
+{
+    return main_21();
+}

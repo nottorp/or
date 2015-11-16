@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    simplexdata.cpp
+    simplexdata.cpp \
+    twophase.cpp
 
 HEADERS += \
-    simplexdata.h
+    simplexdata.h \
+    twophase.h
 
