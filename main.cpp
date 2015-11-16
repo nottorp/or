@@ -82,6 +82,7 @@ int main_21(void)
     t.addSlacks();
     t.addFakes();
     t.newObjective();
+    t.runFirstPhase();
     return 0;
 }
 

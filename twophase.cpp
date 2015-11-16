@@ -110,7 +110,7 @@ void TwoPhase::addFakes(void)
 
 void TwoPhase::newObjective(void)
 {
-    printf("ENTER newObjective()");
+    printf("ENTER newObjective()\n");
     after_fakes.copyTo(after_objective);
     for(int j=0; j<after_fakes.m + after_fakes.n + 1; ++j)
     {
@@ -123,6 +123,13 @@ void TwoPhase::newObjective(void)
         after_objective.tab[after_objective.m][after_objective.m + after_objective.n - 1 - j] = 0;
     printf("Tableau after adjusting objective:\n");
     after_objective.printTable();
+    printf("EXIT newObjective()\n");
+}
+
+void TwoPhase::runFirstPhase(void)
+{
+    SimplexData::StepResult res = after_objective.doSimplex();
+
 }
 
 void TwoPhase::printTable(void)

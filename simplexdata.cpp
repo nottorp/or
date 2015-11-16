@@ -245,7 +245,7 @@ SimplexData::StepResult SimplexData::simpleSimplexStep(void)
     return Continue;
 }
 
-void SimplexData::doSimplex(void)
+SimplexData::StepResult SimplexData::doSimplex(void)
 {
     StepResult res = Continue;
     while (res == Continue)
@@ -265,4 +265,5 @@ void SimplexData::doSimplex(void)
 
         break;
     }
+    return res;
 }

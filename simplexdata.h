@@ -29,7 +29,7 @@ public:
     SimplexData& doPivot2(int pivotrow, int pivotcol);
     StepResult simpleSimplexStep(void);
 
-    void doSimplex(void);
+    StepResult doSimplex(void);
 };
 
 #endif // SIMPLEXDATA_H
