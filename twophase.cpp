@@ -133,7 +133,7 @@ bool TwoPhase::runFirstPhase(void)
     SimplexData::StepResult res = after_objective.doSimplex();
     if (res == SimplexData::Optimal)
     {
-        if (isZero(after_objective.tab[after_objective.m][after_objective.m + after_objective.n + 1]))
+        if (isZero(after_objective.tab[after_objective.m][after_objective.m + after_objective.n]))
             return true;
     }
     return false;

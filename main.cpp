@@ -107,10 +107,10 @@ int main_13(void)
 int main_21(void)
 {
     TwoPhase t;
-    //t.setup(m_2a, n_2a, tab_2a);
+    t.setup(m_2a, n_2a, tab_2a);
     //t.setup(m_2b, n_2b, tab_2b);
     //t.setup(m_2c, n_2c, tab_2c);
-    t.setup(m_2d, n_2d, tab_2d);
+    //t.setup(m_2d, n_2d, tab_2d);
     t.printInitialTable();
     t.addSlacks();
     t.addFakes();
