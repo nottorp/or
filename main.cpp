@@ -78,6 +78,15 @@ double line_2d_2[] = {2, 2, EQ, 4};
 double line_2d_3[] = {1, 2, NO, 0};
 double *tab_2d[] = {line_2d_1, line_2d_2, line_2d_3};
 
+int m_2curs = 2;
+int n_2curs = 3;
+
+double line_2curs_1[] = {1, 1, 2, EQ, 2};
+double line_2curs_2[] = {2, 1, 1, EQ, 4};
+double line_2curs_3[] = {1, 1, 0, NO, 0};
+double *tab_2curs[] = {line_2curs_1, line_2curs_2, line_2curs_3};
+
+
 int main_13(void)
 {
     SimplexData d;
@@ -107,10 +116,11 @@ int main_13(void)
 int main_21(void)
 {
     TwoPhase t;
-    t.setup(m_2a, n_2a, tab_2a);
+    //t.setup(m_2a, n_2a, tab_2a);
     //t.setup(m_2b, n_2b, tab_2b);
     //t.setup(m_2c, n_2c, tab_2c);
     //t.setup(m_2d, n_2d, tab_2d);
+    t.setup(m_2curs, n_2curs, tab_2curs);
     t.printInitialTable();
     t.addSlacks();
     t.addFakes();
@@ -123,6 +133,7 @@ int main_21(void)
     {
         printf("Original problem is NOT feasible, stopping!\n");
     }
+    t.getFakesOut();
     return 0;
 }
 

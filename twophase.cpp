@@ -81,9 +81,10 @@ void TwoPhase::addFakes(void)
     // m == no of constraints and n == no of non basic vars
     int new_n = after_slacks.n + after_slacks.m * 2;
     double **new_tab = new double *[new_m + 1];
-    int cur_fake = after_slacks.n + after_slacks.n;
+    int cur_fake = after_slacks.n + after_slacks.n + 1;
     for(int i=0; i<new_m; ++i)
     {
+        printf("Adding fake on row %d, col %d\n", i, cur_fake);
         new_tab[i] = new double[new_n + 1];
         for(int j=0; j<after_slacks.n + after_slacks.m; ++j)
             new_tab[i][j] = after_slacks.tab[i][j];
@@ -130,13 +131,19 @@ void TwoPhase::newObjective(void)
 
 bool TwoPhase::runFirstPhase(void)
 {
-    SimplexData::StepResult res = after_objective.doSimplex();
+    after_objective.copyTo(after_1stsimplex);
+    SimplexData::StepResult res = after_1stsimplex.doSimplex();
     if (res == SimplexData::Optimal)
     {
-        if (isZero(after_objective.tab[after_objective.m][after_objective.m + after_objective.n]))
+        if (isZero(after_1stsimplex.tab[after_1stsimplex.m][after_1stsimplex.m + after_1stsimplex.n]))
             return true;
     }
     return false;
+}
+
+void TwoPhase::getFakesOut(void)
+{
+    after_1stsimplex.getFakesOut(fake_count);
 }
 
 void TwoPhase::printTable(void)

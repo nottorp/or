@@ -28,12 +28,15 @@ public:
     int fake_count;
     SimplexData after_fakes;
     SimplexData after_objective;
+    SimplexData after_1stsimplex;
 
     void setup(int _m, int _n, double **_tab);
     void addSlacks(void);
     void addFakes(void);
     void newObjective(void);
     bool runFirstPhase(void);
+    void getFakesOut(void);
+
 
     void printInitialTable(void);
     void printTable(void);

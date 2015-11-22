@@ -9,7 +9,7 @@
 #define BLANDS
 
 #undef ALTERNATE_PIVOT
-#define ALTERNATE_PIVOT
+//#define ALTERNATE_PIVOT
 
 SimplexData::SimplexData()
 {
@@ -190,7 +190,7 @@ SimplexData& SimplexData::doPivot(int pivotrow, int pivotcol)
     for (int i=0; i<m+1; ++i)
     {
         if (i != pivotrow)
-            res->tab[i][pivotcol] = -1 * tab[i][pivotcol] / tab[pivotrow][pivotcol];
+            res->tab[i][pivotcol] = 0/*-1 * tab[i][pivotcol] / tab[pivotrow][pivotcol]*/;
     }
     for (int j=0; j<m+n+1; ++j)
     {
@@ -200,6 +200,8 @@ SimplexData& SimplexData::doPivot(int pivotrow, int pivotcol)
     res->tab[pivotrow][pivotcol] = 1;
     // Adjust row label in the copy as well
     res->rowlabels[pivotrow] = collabels[pivotcol];
+    // Fix zeros, those -0.0 are ugly as hell
+    res->fixZeros();
     // ... and return the copy
     return *res;
 }
@@ -294,4 +296,62 @@ SimplexData::StepResult SimplexData::doSimplex(void)
         break;
     }
     return res;
+}
+
+void SimplexData::getFakesOut(int fake_count)
+{
+    //printf("Entering getFakesOut(%d)\n", fake_count);
+    int fake_start = m + n - fake_count;
+    bool did_pivot = true;
+    while (did_pivot)
+    {
+        did_pivot = false;
+        for (int i=0; i<m; ++i)
+        {
+            // Do we have a fake var on a row?
+            // Row and col labels are 1 based for human consumption!
+            if ((rowlabels[i] - 1) >= fake_start)
+            {
+                did_pivot = true;
+                printf("Should get fake %d on row %d out of tableau\n", rowlabels[i], i);
+                // Find a non fake that's not already in to pivot in
+                int non_fake = -1;
+                for (int j=0; j<fake_start; ++j)
+                {
+                    bool is_in = false;
+                    for (int k=0; k<m; ++k)
+                    {
+                        //printf("rowlabels[%d] == %d, j == %d\n", k, rowlabels[k], j);
+                        if ((rowlabels[k] - 1) == j)
+                            is_in = true;
+                    }
+                    if ((!is_in) && (!isZero(tab[i][j])))
+                    {
+                        non_fake = j;
+                        break;
+                    }
+                }
+                if (non_fake < 0)
+                {
+                    printf("Internal error, could not find non-fake to pivot in place of fake %d on row %d!\n", rowlabels[i], i);
+                    return;
+                }
+                else
+                {
+                    printf("Pivoting row %d and col %d\n", i, non_fake);
+                    *this = doPivot(i, non_fake);
+                    printTable();
+                    break; // OUT OF THE FOR!
+                }
+            }
+        }
+    }
+}
+
+void SimplexData::fixZeros(void)
+{
+    for (int i=0; i<m+1; ++i)
+        for (int j=0; j<m+n+1; ++j)
+            if (isZero(tab[i][j]))
+                tab[i][j] = 0;
 }
