@@ -1,0 +1,194 @@
+\documentclass{beamer}
+%\usetheme{Dresden}
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{hyperref}
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+%\usepackage{sectsty} % Allows customizing section commands 
+\usepackage[utf8x]{inputenc}
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{relsize}
+
+% Macros for nicely rounded letters needed with all these sets...
+\newcommand{\Drr}{\mathcal{D}}
+\newcommand{\Krr}{\mathcal{K}}
+\newcommand{\Lrr}{\mathcal{L}}
+\newcommand{\Prr}{\mathcal{P}}
+
+% Can't find the shorthand for integers
+\newcommand{\Nzz}{\mathbb{N}}
+\newcommand{\Zzz}{\mathbb{Z}}
+
+
+%Information to be included in the title page:
+\title{Tutte's Characterization of TUMs\\A demonstration by A M Gerards}
+\author{Cojocaru Andrei, Pavel Nicolae}
+\date{\normalsize\today}
+ 
+\setbeamertemplate{items}[square]
+ 
+\begin{document}
+
+\section{Title}
+\frametitle{Latex is an Art Form}
+\frame{\titlepage}
+
+\section{Whatever, these section names don't show anywhere}
+\begin{frame}
+\frametitle{Tutte's Theorem}
+\begin{definition}
+Let A be a {0, 1}-matrix. Then the following are equivalent:
+\begin{enumerate}
+\item A has a totally unimodular signing
+\item A cannot be transformed to
+\begin{center}
+M(F$_7$) = $\begin{bmatrix} 1 & 1 &1 & 0 \\ 1 & 1 & 0 & 1 \\ 1 & 0 &1 & 1\end{bmatrix}$
+\end{center}
+\end{enumerate}
+by applying (repeatedly) the following operations:
+\begin{equation}
+\begin{aligned}
+% I am SO happy about learning LaTeX
+deleting\, rows\, or\, columns\\
+permuting\, rows\, or\, columns\\
+taking\, the\, transposed\, matrix\\
+pivoting\, over\, GF(2)
+\end{aligned}
+\end{equation}
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tutte's Theorem, more definitions}
+\begin{definition}
+A matrix is \emph{totally unimodular} if all of its subdeterminants are 0, 1 or -1. (In particular, all entries of a totally unimodular matrix are 0, 1 or -1).
+\end{definition}
+\begin{definition}
+Signing a {0, 1}-matrix means replacing some of the 1s by -1s.
+\end{definition}
+\begin{definition}
+Pivoting a matrix A on an entry $\epsilon = \pm 1$ means replacing
+\begin{equation}
+A = \begin{pmatrix}
+\epsilon & y^T \\ x & D
+\end{pmatrix}
+by\, B = \begin{pmatrix}
+-\epsilon & y ^T \\ x & D - \epsilon x y^T
+\end{pmatrix}
+\end{equation}
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Preliminaries}
+\begin{block}{Lemma 1}
+Let G be a connected bipartite graph (with no parallel edges). If deleting any two nodes in the same partition yields a disconnected graph, then G is a path or a circuit. 
+\end{block}
+\begin{block}{Lemma 2}
+Let A be a square {0, 1, -1} matrix. If G(A) is a circuit, then A is totally unimodular if and only if the number of -1s in A is congruent to n modulo 2.
+\end{block}
+\begin{block}{Lemma 3}
+Let $M_1$ and $M_2$ be two totally unimodular matrices. If $M_1 \equiv M_2 (mod 2)$, then $M_1$ can be obtained from $M_2$ by multiplying some rows and columns with -1. ($M_1 \equiv M_2 (mod 2): \exists P$ so that $P^T M_1 P = M_2$).
+\end{block}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Pivoting properties}
+Some useful properties of the pivoting operation (2):
+\begin{gather}
+\begin{aligned}
+\text{(i) Pivoting B on -}\epsilon\text{ yields A}\\
+\text{(ii) If A is square, then det(A) = }\pm det(D - \epsilon x y^T)\\
+\text{(iii) If A is totally unimodular, then B is totally unimodular}\\
+\text{(iv) If G(A) is connected, then G(B) is connected}\\
+\text{(G(B) disconnected plus (i)}\implies\text{G(A) disconnected)}
+\end{aligned}
+\end{gather}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof of Tutte's theorem, $\implies$}
+\begin{proof}
+The first three operations of (1) obviously don't change the matrix having an unimodular signing or not.\par
+Property (3) (iii) of pivoting means pivoting does not change the matrix having an unimodular signing either.\par
+Since $M(F_7)$ has no totally unimodular signing, (i) $\implies$ (ii).
+\end{proof}
+\end{frame}
+
+\begin{frame}{allowframebreaks}
+\frametitle{Proof of Tutte's theorem, $\impliedby$}
+Let A be a {0, 1} matrix, satisfying (ii) but with no totally unimodular signing. We may assume that each proper sumbatrix of A has a totally unimodular signing, so the bipartite graph G(A) is connected.\par
+G(A) is not a path or circuit, or A would have a totally unimodular signing. Hence by Lemma 1, A or $A^T$ is equal (up to permutation of columns) to [x|y|N], where x and y are two column vectors and where G(N) is connected. (x and y correspond to the nodes we eliminate and still get a connected graph).\par
+By the initial assumption, both [x|N] and [y|N] have a totally unimodular signing, and by \emph{Lemma 3} they can be chosen so that N is signed in the same way in both cases.\par
+Hence A or $A^T$ has a signing A'=[x'|y'|N']\par
+\begin{gather}
+\begin{aligned}
+\text{(i) G(N') is connected}\\
+\text{(ii) Both [x'|N'] and [y'|N'] are totally unimodular}
+\end{aligned}
+\end{gather}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof of Tutte's theorem, $\impliedby$ (2)}
+\begin{block}{Claim}
+We can assume that the matrix [x'|y'] has a submatrix of the form
+\begin{equation*}
+\begin{pmatrix}
+1 & 1 \\ 1 & -1
+\end{pmatrix}
+\end{equation*}
+\end{block}
+\begin{block}{Proof Sketch}
+Pivoting A' on entries in N' does not change property (4) so pivot in such a way that the smallest submatrix with its determinant not 0, 1 or -1 is as small as possible. This submatrix has to be of the form of the claim, and a submatrix of [x'|y'].\\
+The two rows corresponding to the submatrix have a path in the corresponding graph, thus:
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof of Tutte's theorem, $\impliedby$ (3)}
+A has a submatrix of the form:\\
+\begin{center}
+$\begin{pmatrix}
+1 & 1 & 1 & 0 & 0 & ... & 0 & 0\\
+1 & -1 & 0 & 0 & 0 & ... & 0 & 1\\
+   &     & 1 & \underline{1} &   &   &   & \\
+   &     &    & 1 & \underline{1} & & \mathlarger{0} & \\
+* & * &  &  &  1 & \ddots &  &  \\
+ &  & & \mathlarger{0} &  & \ddots & \underline{1} & \\
+ & & & & & & 1 & 1
+\end{pmatrix}$
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proof of Tutte's theorem, $\impliedby$ (4)}
+By pivoting on the underlined elements, deleting the rows and columns containing them, multiplying some rows/columns by -1 (and exchanging x' and y' if necessary), we obtain a submatrix of the form:\\
+\begin{center}
+$\begin{pmatrix}
+1 & 1 & 1 & 0 \\
+1 & -1 & 0 & 1 \\
+a & b & 1 & 1
+\end{pmatrix}$
+\end{center}
+It's still the case that deleting columns x' or y', the remaining matrix is still totally unimodular, so a = 1 and b = 0. In this case, A can be transformed to $M(F_7)$, which contradicts our assumption.
+\end{frame}
+
+\section{References}
+\begin{frame} 
+\frametitle{Original Article}
+A Short Proof of Tutte's Characterization of Totally Unimodular Matrices\\
+by A. M. H. Gerards\\
+Tilburg University, The Netherlands
+\end{frame}
+ 
+\end{document}
+
