@@ -134,6 +134,7 @@ int main_21(void)
         printf("Original problem is NOT feasible, stopping!\n");
     }
     t.getFakesOut();
+    t.restateObjective();
     return 0;
 }
 

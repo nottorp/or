@@ -28,17 +28,22 @@ SimplexData::~SimplexData()
     cleanup();
 }
 
-void SimplexData::setup(int _m, int _n, double **_tab)
+void SimplexData::setup(int _m, int _n, double **_tab, int fake_count)
 {
     cleanup();
     m = _m;
-    n = _n;
+    n = _n - fake_count;
     tab = new double *[m + 1];
     for (int i=0; i<m+1; ++i)
     {
         tab[i] = new double[m + n + 1];
-        for (int j=0; j<m+n+1; ++j)
+        //for (int j=0; j<m+n+1; ++j)
+        //    tab[i][j] = _tab[i][j];
+        // Copy the columns corresponding to non fake variables
+        for (int j=0; j<m+n; ++j)
             tab[i][j] = _tab[i][j];
+        // And the RHS column which may be at a different position if fake_count > 0
+        tab[i][m+n] = _tab[i][m+_n];
     }
     rowlabels = new int[m];
     for (int i=0; i<m; ++i)
@@ -48,13 +53,13 @@ void SimplexData::setup(int _m, int _n, double **_tab)
         collabels[i] = i + 1;
 }
 
-void SimplexData::copyTo(SimplexData &dest) const
+void SimplexData::copyTo(SimplexData &dest, int fake_count) const
 {
     dest.cleanup();
-    dest.setup(m, n, tab);
+    dest.setup(m, n, tab, fake_count);
     for (int i=0; i<m; ++i)
         dest.rowlabels[i] = rowlabels[i];
-    for (int i=0; i<m+n; ++i)
+    for (int i=0; i<m+n-fake_count; ++i)
         dest.collabels[i] = collabels[i];
 }
 
@@ -333,6 +338,7 @@ void SimplexData::getFakesOut(int fake_count)
                 }
                 if (non_fake < 0)
                 {
+                    //TODO: instead, remove the row here - it means all the possible pivots are zero
                     printf("Internal error, could not find non-fake to pivot in place of fake %d on row %d!\n", rowlabels[i], i);
                     return;
                 }

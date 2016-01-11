@@ -11,8 +11,11 @@ public:
     ~SimplexData();
 
     void cleanup(void);
-    void setup(int m, int n, double **tab);
-    void copyTo(SimplexData &dest) const;
+    // Functions assume that, when they receive fake_count > 0, they get a tableau that has had those fakes already
+    // added - i.e. no check is made that n is indeed >= fake_count
+    // It is only used internally by the two phase simplex
+    void setup(int m, int n, double **tab, int fake_count=0);
+    void copyTo(SimplexData &dest, int fake_count = 0) const;
 
     void printTable(void);
 
@@ -33,6 +36,7 @@ public:
     SimplexData& doPivot2(int pivotrow, int pivotcol);
     StepResult simpleSimplexStep(void);
     void fixZeros(void);
+    void swapCols(int a, int b);
 
     // This is only used by the two phase simplex who knows how many fake variables we have
     void getFakesOut(int fake_count);

@@ -146,6 +146,25 @@ void TwoPhase::getFakesOut(void)
     after_1stsimplex.getFakesOut(fake_count);
 }
 
+// THIS ASSUMES THE BASE IS IN THE FIRST m COLUMNS in after_1stsimplex!
+void TwoPhase::restateObjective(void)
+{
+    printf("Restating original objective function\n");
+    // Get rid of the fake cols
+    after_1stsimplex.copyTo(new_objective, fake_count);
+    // Copy from first tableau, only the basic vars
+    for(int j=0; j<after_slacks.m; ++j)
+        new_objective.tab[new_objective.m][j] = after_slacks.tab[after_slacks.m][j];
+    for(int j=new_objective.m; j < new_objective.m + new_objective.n + 1; ++j)
+    {
+        double sum = 0.0;
+        for(int i=0; i<new_objective.m; ++i)
+            sum = sum - new_objective.tab[i][j];
+        new_objective.tab[new_objective.m][j] = sum;
+    }
+    new_objective.printTable();
+}
+
 void TwoPhase::printTable(void)
 {
     // This will crash! Don't call!

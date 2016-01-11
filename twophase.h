@@ -29,6 +29,7 @@ public:
     SimplexData after_fakes;
     SimplexData after_objective;
     SimplexData after_1stsimplex;
+    SimplexData new_objective;
 
     void setup(int _m, int _n, double **_tab);
     void addSlacks(void);
@@ -36,7 +37,7 @@ public:
     void newObjective(void);
     bool runFirstPhase(void);
     void getFakesOut(void);
-
+    void restateObjective(void);
 
     void printInitialTable(void);
     void printTable(void);
